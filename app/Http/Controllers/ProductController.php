@@ -146,6 +146,12 @@ class ProductController extends Controller
                 $products->where('products.category_id', $category_id);
             }
 
+            $subcategory_id = request()->get('subcategory_id', null);
+            if (!empty($subcategory_id)) {
+                $products->where('products.sub_category_id', $subcategory_id);
+            }
+
+
             $brand_id = request()->get('brand_id', null);
             if (!empty($brand_id)) {
                 $products->where('products.brand_id', $brand_id);
@@ -989,6 +995,25 @@ class ProductController extends Controller
             echo $html;
             exit;
         }
+    }
+
+
+    public function get_subcategories($cat_id, Request $request)
+    {
+        $category_id = $cat_id;
+        $business_id = $request->session()->get('user.business_id');
+        $sub_categories = Category::where('business_id', $business_id)
+                    ->where('parent_id', $category_id)
+                    ->get();
+
+        $html = '<option selected="selected" value="">All</option>';
+        if (!empty($sub_categories)) {
+            foreach ($sub_categories as $sub_category) {
+                $html .= '<option value="' . $sub_category->id .'">' .$sub_category->name . '</option>';
+            }
+        }
+
+        return $html;
     }
 
     /**

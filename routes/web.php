@@ -112,6 +112,8 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::post('/products/toggle-woocommerce-sync', 'ProductController@toggleWooCommerceSync');
     
     Route::resource('products', 'ProductController');
+    Route::get('/get-subcategories/{id}', 'ProductController@get_subcategories');
+    
 
     Route::post('/import-purchase-products', 'PurchaseController@importPurchaseProducts');
     Route::post('/purchases/update-status', 'PurchaseController@updateStatus');

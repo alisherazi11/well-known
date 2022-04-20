@@ -34,6 +34,15 @@
 
         <div class="col-md-3">
             <div class="form-group">
+                <label for="subcategory_id">Subcategory:</label>
+                <select class="form-control" id="product_list_filter_subcategory_id" name="subcategory_id">
+                    <option selected="selected" value="">All</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
                 {!! Form::label('unit_id', __('product.unit') . ':') !!}
                 {!! Form::select('unit_id', $units, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_unit_id', 'placeholder' => __('lang_v1.all')]); !!}
             </div>
@@ -146,6 +155,7 @@
                     "data": function ( d ) {
                         d.type = $('#product_list_filter_type').val();
                         d.category_id = $('#product_list_filter_category_id').val();
+                        d.subcategory_id = $('#product_list_filter_subcategory_id').val();
                         d.brand_id = $('#product_list_filter_brand_id').val();
                         d.unit_id = $('#product_list_filter_unit_id').val();
                         d.tax_id = $('#product_list_filter_tax_id').val();
@@ -361,7 +371,28 @@
                 });
             });
 
-            $(document).on('change', '#product_list_filter_type, #product_list_filter_category_id, #product_list_filter_brand_id, #product_list_filter_unit_id, #product_list_filter_tax_id, #location_id, #active_state, #repair_model_id', 
+            
+            $(document).on('change', '#product_list_filter_category_id', 
+                function() {
+                    url = '{{url('get-subcategories')}}'+"/"+$(this).val();
+                    $("#product_list_filter_subcategory_id").html("<option value='' selected>All</option>");
+
+                    $.get(url, function(result){
+
+                        $("#product_list_filter_subcategory_id").html(result);
+
+                        if ($("#product_list_tab").hasClass('active')) {
+                            product_table.ajax.reload();
+                        }
+
+                        if ($("#product_stock_report").hasClass('active')) {
+                            stock_report_table.ajax.reload();
+                        }
+                    });
+                    
+            });
+
+            $(document).on('change', '#product_list_filter_type, #product_list_filter_subcategory_id, #product_list_filter_brand_id, #product_list_filter_unit_id, #product_list_filter_tax_id, #location_id, #active_state, #repair_model_id', 
                 function() {
                     if ($("#product_list_tab").hasClass('active')) {
                         product_table.ajax.reload();
