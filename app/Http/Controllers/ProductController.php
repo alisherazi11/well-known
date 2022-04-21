@@ -980,13 +980,20 @@ class ProductController extends Controller
     public function getSubCategories(Request $request)
     {
         if (!empty($request->input('cat_id'))) {
+
+            if($request->input('cat_id') == "all"){
+                $html = '<option value="">All Brands</option>';
+                echo $html;
+                exit;
+            }
+
             $category_id = $request->input('cat_id');
             $business_id = $request->session()->get('user.business_id');
             $sub_categories = Category::where('business_id', $business_id)
                         ->where('parent_id', $category_id)
                         ->select(['name', 'id'])
                         ->get();
-            $html = '<option value="">None</option>';
+            $html = '<option value="">All Brands</option>';
             if (!empty($sub_categories)) {
                 foreach ($sub_categories as $sub_category) {
                     $html .= '<option value="' . $sub_category->id .'">' .$sub_category->name . '</option>';

@@ -1756,7 +1756,8 @@ class SellPosController extends Controller
                     $query->orWhere('p.sub_category_id', $category_id);
                 });
             }
-            if (!empty($brand_id)) {
+            
+            if (!empty($brand_id) && ($category_id != 'all')) {
                 $products->where('p.sub_category_id', $brand_id);
             }
 
